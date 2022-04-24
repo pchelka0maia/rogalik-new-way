@@ -124,8 +124,8 @@ def draw():
         mod.screen.draw.text("Press B to Back", topleft=(250, 300), color="white", fontsize=25)
         mod.screen.draw.text(str(char.health), topleft=(250, 280), color="white", fontsize=25)
         mod.screen.draw.text(str(char.attack), topleft=(320, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(h), center=(100, 140), color="white", fontsize=25)
-        mod.screen.draw.text(str(a), center=(100, 100), color="white", fontsize=25)
+        mod.screen.draw.text(str(h), topleft=(100, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(a), topleft=(170, 280), color="white", fontsize=25)
 
 
 

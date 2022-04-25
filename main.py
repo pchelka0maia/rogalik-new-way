@@ -54,6 +54,8 @@ a = 1
 a1 = 15
 a2 = 0
 a3 = 0
+health = 0
+
 
 h = 1
 h1 = 50
@@ -116,16 +118,17 @@ def draw():
         mod.screen.draw.text('Level:' + str(level), topleft=(10, 10), color='white', fontsize=16)
         char.draw()
     elif mode == 'attack':
+        enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
         at1.draw()
         at_disp_1.draw()
         at_disp_2.draw()
-        en.draw()
+        enemies[enemy_index].draw()
         ch.draw()
         mod.screen.draw.text("Press B to Back", topleft=(250, 300), color="white", fontsize=25)
         mod.screen.draw.text(str(char.health), topleft=(250, 280), color="white", fontsize=25)
         mod.screen.draw.text(str(char.attack), topleft=(320, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(h), topleft=(100, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(a), topleft=(170, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(100, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(170, 280), color="white", fontsize=25)
 
 
 
@@ -134,11 +137,6 @@ def on_key_down(key):
 
     old_i = char.i
     old_j = char.j
-
-    # if mod.keyboard.p:
-    #     mode = 'attack'
-    if mod.keyboard.b:
-        mode = 'game'
 
     if mod.keyboard.right:
         if my_map[char.i][char.j + 1] != 0:
@@ -160,21 +158,22 @@ def on_key_down(key):
         char.y = cell.height * char.i
 
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
-
+    
     if enemy_index != -1:  # если есть пересечения хоть с одним из врагов
-        enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
-        a = enemy.attack
-        h = enemy.health
-        mode = 'attack'
-    if h <= 0:  # Жизнь врага <0 ?
-        enemies.pop(enemy_index) # удаляем его из списка по номеру
-        a = 1
-        h = 1
-        mode = 'game'
+        mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
 
-    if mod.keyboard.x:
-        h -= char.attack  # Уменьшаем здоровье врага
-        char.health -= a  # Уменьшаем свое здоровье
+        enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
+
+        if enemy.health <= 0 and mode == "attack":  # Жизнь врага <0 ?
+            enemies.pop(enemy_index) # удаляем его из списка по номеру
+            mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
+
+        if mod.keyboard.x and mode=='attack':
+            enemy.health -= char.attack  # Уменьшаем здоровье врага
+            char.health -= enemy.attack  # Уменьшаем свое здоровье
+        
+        if mod.keyboard.b and mode == 'attack':
+            mode = 'game'
 
 
 pgzrun.go()

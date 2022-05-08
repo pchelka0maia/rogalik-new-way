@@ -31,11 +31,12 @@ cell2 = mod.Actor("bones")
 cell3 = mod.Actor("crack")
 cell4 = mod.Actor("bones")
 
+# Дисплей атаки
 at1 = mod.Actor("at1", topleft=(50, 100))
 at_disp_1 = mod.Actor("at2", topleft=(80, 280))
 at_disp_2 = mod.Actor("at2", topleft=(230, 280))
-left2 = mod.Actor("left2", topleft=(250, 150))
-# ch = mod.Actor("ch", topleft=(250, 150))
+left2 = mod.Actor("left2", topleft=(250, 150)) # картинка chara
+
 
 # Char
 
@@ -46,7 +47,7 @@ char.i = 1
 char.j = 1
 
  # Enemy
-enemy12 = mod.Actor("enemy12", topleft=(100, 150))
+enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 # enemy = 0
 # enemy1 = mod.Actor("enemy", topleft=(-100, -100))
 
@@ -97,6 +98,7 @@ def draw_map():
                 cell3.left = cell.width * j
                 cell3.top = cell.height * i
                 cell3.draw()
+            # плита, через которую char должен переходить на другой level
             elif my_map[i][j] == 4:
                 cell4.left = cell.width * j
                 cell4.top = cell.height * i
@@ -119,7 +121,7 @@ def draw():
         at1.draw()
         at_disp_1.draw()
         at_disp_2.draw()
-        if (1 <= level) and (level <= 3):
+        if (1 <= level) and (level <= 3): # от level'a будет зависеть отрисовка врагов на дисплее
             enemy12.draw()
         left2.draw()
         mod.screen.draw.text("Press B to Back", topleft=(240, 320), color="white", fontsize=25)
@@ -173,7 +175,7 @@ def on_key_down(key):
         if mod.keyboard.b and mode == 'attack':
             mode = 'game'
 
-    if mod.keyboard.a and enemies == []:
+    if mod.keyboard.a and enemies == []: # Переход на другой level
         level += 1
         draw_map()
         char.pos = cell.width, cell.height

@@ -11,7 +11,7 @@ my_map = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 1, 1, 1, 0, 0, 0, 1, 0],
           [0, 1, 1, 1, 0, 3, 1, 1, 0],
           [0, 1, 1, 1, 0, 1, 1, 1, 0],
-          [0, 1, 1, 1, 0, 1, 1, 1, 1],
+          [0, 1, 1, 1, 0, 1, 1, 1, 4],
           [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 mobs = []
@@ -29,59 +29,53 @@ cell = mod.Actor("border")
 cell1 = mod.Actor("floor")
 cell2 = mod.Actor("bones")
 cell3 = mod.Actor("crack")
+cell4 = mod.Actor("bones")
 
 at1 = mod.Actor("at1", topleft=(50, 100))
 at_disp_1 = mod.Actor("at2", topleft=(80, 280))
 at_disp_2 = mod.Actor("at2", topleft=(230, 280))
-en = mod.Actor("en", topleft=(100, 150))
-ch = mod.Actor("ch", topleft=(250, 150))
+left2 = mod.Actor("left2", topleft=(250, 150))
+# ch = mod.Actor("ch", topleft=(250, 150))
 
 # Char
+
 char = mod.Actor("stand", topleft=(cell.width, cell.height), anchor=('left', 'top'))
 char.health = 100
 char.attack = 50
 char.i = 1
 char.j = 1
 
-# Enemy
-enemy = 0
-enemy1 = mod.Actor("enemy", topleft=(-100, -100))
+ # Enemy
+enemy12 = mod.Actor("enemy12", topleft=(100, 150))
+# enemy = 0
+# enemy1 = mod.Actor("enemy", topleft=(-100, -100))
 
 # Переменные
 mode = 'game'
 level = 1
-a = 1
-a1 = 15
-a2 = 0
-a3 = 0
-health = 0
-
-
-h = 1
-h1 = 50
-h2 = 0
-h3 = 0
 
 enemies = []
-# Рандомим врагов
-if level == 1:
-    for i in range(5):
-        x = random.randint(1, len(my_map[0]) - 2)
-        y = random.randint(1, len(my_map) - 2)
+def enemies_random():
+    # Рандомим врагов
+    global level
+    if (1 <= level) and (level <= 3):
+        for i in range(5):
+            x = random.randint(1, len(my_map[0]) - 2)
+            y = random.randint(1, len(my_map) - 2)
 
-        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
-            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
-                x = random.randint(1, len(my_map[0]) - 2)
-                y = random.randint(1, len(my_map) - 2)
+            if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
+                while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
+                    x = random.randint(1, len(my_map[0]) - 2)
+                    y = random.randint(1, len(my_map) - 2)
 
-        enemy1 = mod.Actor('enemy', topleft=(x * cell.width, y * cell.height))
-        # enemy1.row = x  # х врага
-        # enemy1.column = y  # y врага
-        enemy1.health = 50 # enemy.health = 50  # здоровье врага
-        enemy1.attack = 15 # enemy.attack = 15  # атака врага
-        enemies.append(enemy1)  # добавляем врага в список
+            enemy1 = mod.Actor('enemy', topleft=(x * cell.width, y * cell.height))
+            # enemy1.row = x  # х врага
+            # enemy1.column = y  # y врага
+            enemy1.health = 50 # enemy.health = 50  # здоровье врага
+            enemy1.attack = 15 # enemy.attack = 15  # атака врага
+            enemies.append(enemy1)  # добавляем врага в список
 
-        mobs.append([y, x])  # добавляем координаты в список мобов
+            mobs.append([y, x])  # добавляем координаты в список мобов
 
 
 def draw_map():
@@ -103,7 +97,10 @@ def draw_map():
                 cell3.left = cell.width * j
                 cell3.top = cell.height * i
                 cell3.draw()
-
+            elif my_map[i][j] == 4:
+                cell4.left = cell.width * j
+                cell4.top = cell.height * i
+                cell4.draw()
 
 def draw():
     # Режим игры
@@ -122,58 +119,65 @@ def draw():
         at1.draw()
         at_disp_1.draw()
         at_disp_2.draw()
-        enemies[enemy_index].draw()
-        ch.draw()
-        mod.screen.draw.text("Press B to Back", topleft=(250, 300), color="white", fontsize=25)
-        mod.screen.draw.text(str(char.health), topleft=(250, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(char.attack), topleft=(320, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(100, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(170, 280), color="white", fontsize=25)
+        if (1 <= level) and (level <= 3):
+            enemy12.draw()
+        left2.draw()
+        mod.screen.draw.text("Press B to Back", topleft=(240, 320), color="white", fontsize=25)
+        mod.screen.draw.text("Press X to Attack", topleft=(80, 320), color="red", fontsize=25)
+        mod.screen.draw.text(str(char.health), topleft=(260, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(char.attack), topleft=(330, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(110, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(180, 280), color="white", fontsize=25)
 
 
 
 def on_key_down(key):
-    global mode, enemy, a, a1, a2, a3, h, h1, h2, h3
+    global mode, enemy, i, j, level
 
     old_i = char.i
     old_j = char.j
 
-    if mod.keyboard.right:
+    if mod.keyboard.right and mode == 'game':
         if my_map[char.i][char.j + 1] != 0:
             char.j += 1
         char.x = cell.width * char.j
         char.image = "stand"
-    elif mod.keyboard.left:
+    elif mod.keyboard.left and mode == 'game':
         if my_map[char.i][char.j - 1] != 0:
             char.j -= 1
         char.x = cell.width * char.j
         char.image = "left"
-    elif mod.keyboard.up:
+    elif mod.keyboard.up and mode == 'game':
         if my_map[char.i - 1][char.j] != 0:
             char.i -= 1
         char.y = cell.height * char.i
-    elif mod.keyboard.down:
+    elif mod.keyboard.down and mode == 'game':
         if my_map[char.i + 1][char.j] != 0:
             char.i += 1
         char.y = cell.height * char.i
 
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
-    
+
     if enemy_index != -1:  # если есть пересечения хоть с одним из врагов
         mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
-
         enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
 
         if enemy.health <= 0 and mode == "attack":  # Жизнь врага <0 ?
             enemies.pop(enemy_index) # удаляем его из списка по номеру
             mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
-        if mod.keyboard.x and mode=='attack':
+        if mod.keyboard.x and mode == 'attack':
             enemy.health -= char.attack  # Уменьшаем здоровье врага
             char.health -= enemy.attack  # Уменьшаем свое здоровье
         
         if mod.keyboard.b and mode == 'attack':
             mode = 'game'
 
+    if mod.keyboard.a and enemies == []:
+        level += 1
+        draw_map()
+        char.pos = cell.width, cell.height
+        enemies_random()
 
+enemies_random()
 pgzrun.go()

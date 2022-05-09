@@ -3,6 +3,7 @@ import random
 import pygame
 import sys
 import os
+import time
 
 mod = sys.modules['__main__']
 
@@ -43,12 +44,12 @@ cell4 = mod.Actor("bones")
 at1 = mod.Actor("at1", topleft=(50, 100))
 at_disp_1 = mod.Actor("at2", topleft=(80, 280))
 at_disp_2 = mod.Actor("at2", topleft=(230, 280))
-left2 = mod.Actor("left2", topleft=(250, 150)) # картинка chara
+left3 = mod.Actor("left3", topleft=(250, 150)) # картинка chara
 
 
 # Char
 
-char = mod.Actor("stand", topleft=(cell.width, cell.height), anchor=('left', 'top'))
+char = mod.Actor("stand1", topleft=(cell.width, cell.height), anchor=('left', 'top'))
 char.health = 100
 char.attack = 50
 char.i = 1
@@ -62,6 +63,7 @@ enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 # Переменные
 mode = 'game'
 level = 1
+q = 0
 
 enemies = []
 def enemies_random():
@@ -131,7 +133,7 @@ def draw():
         at_disp_2.draw()
         if (1 <= level) and (level <= 3): # от level'a будет зависеть отрисовка врагов на дисплее
             enemy12.draw()
-        left2.draw()
+        left3.draw()
         mod.screen.draw.text("Press Q to Back", topleft=(240, 320), color="white", fontsize=25)
         mod.screen.draw.text("Press E to Attack", topleft=(80, 320), color="red", fontsize=25)
         mod.screen.draw.text(str(char.health), topleft=(260, 280), color="white", fontsize=25)
@@ -147,40 +149,47 @@ def on_key_down(key):
     old_i = char.i
     old_j = char.j
 
-    if mod.keyboard.d and mode == 'game':
-        if my_map[char.i][char.j + 1] != 0:
-            char.j += 1
-        char.x = cell.width * char.j
-        char.image = "stand"
-    elif mod.keyboard.a and mode == 'game':
-        if my_map[char.i][char.j - 1] != 0:
-            char.j -= 1
-        char.x = cell.width * char.j
-        char.image = "left"
-    elif mod.keyboard.w and mode == 'game':
-        if my_map[char.i - 1][char.j] != 0:
-            char.i -= 1
-        char.y = cell.height * char.i
-    elif mod.keyboard.s and mode == 'game':
-        if my_map[char.i + 1][char.j] != 0:
-            char.i += 1
-        char.y = cell.height * char.i
+
+    # if mod.keyboard.d and mode == 'game':
+    #     if my_map[char.i][char.j + 1] != 0:
+    #         char.j += 1
+    #     char.x = cell.width * char.j
+    #     char.image = "stand"
+    # elif mod.keyboard.a and mode == 'game':
+    #     if my_map[char.i][char.j - 1] != 0:
+    #         char.j -= 1
+    #     char.x = cell.width * char.j
+    #     char.image = "left"
+    # elif mod.keyboard.w and mode == 'game':
+    #     if my_map[char.i - 1][char.j] != 0:
+    #         char.i -= 1
+    #     char.y = cell.height * char.i
+    # elif mod.keyboard.s and mode == 'game':
+    #     if my_map[char.i + 1][char.j] != 0:
+    #         char.i += 1
+    #     char.y = cell.height * char.i
 
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
 
     if enemy_index != -1:  # если есть пересечения хоть с одним из врагов
+        # if mod.keyboard.e and mode == 'game':
         mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
         enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
 
-        if enemy.health <= 0 and mode == "attack":  # Жизнь врага <0 ?
+        if enemy.health <= 0 and mode == "attack":
+            # Жизнь врага <0 ?
             enemies.pop(enemy_index) # удаляем его из списка по номеру
             mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
         if mod.keyboard.e and mode == 'attack':
             enemy.health -= char.attack  # Уменьшаем здоровье врага
             char.health -= enemy.attack  # Уменьшаем свое здоровье
-        
+
         if mod.keyboard.q and mode == 'attack':
+            if char.x + 100 != 700:
+                char.x += 100
+            else:
+                char.x -= 100
             mode = 'game'
 
     if mod.keyboard.e and enemies == []: # Переход на другой level
@@ -189,6 +198,86 @@ def on_key_down(key):
         char.pos = cell.width, cell.height
         enemies_random()
 
+def update(dt):
+    global q
+    if mod.keyboard.d and mode == 'game':
+        if q == 0:
+            char.image = "stand1"
+            time.sleep(0.1)
+            q += 1
+        elif q == 1:
+            char.image = 'right1'
+            time.sleep(0.1)
+            q += 1
+        elif q == 2:
+            char.image = 'right2'
+            time.sleep(0.1)
+            q -= 2
+        char.x += 15
+        if char.x >= 700 - 50:
+            char.x = 700 - 50
+
+    if mod.keyboard.a and mode == 'game':
+        if q == 0:
+            char.image = "left1"
+            time.sleep(0.1)
+            q += 1
+        elif q == 1:
+            char.image = 'left2'
+            time.sleep(0.1)
+            q += 1
+        elif q == 2:
+            char.image = 'left3'
+            time.sleep(0.1)
+            q -= 2
+        char.x -= 15
+        if char.x <= 50:
+            char.x = 50
+
+    if mod.keyboard.w and mode == 'game':
+        if q == 0:
+            char.image = "up1"
+            time.sleep(0.1)
+            q += 1
+        elif q == 1:
+            char.image = 'up2'
+            time.sleep(0.1)
+            q -= 1
+
+        char.y -= 15
+        if char.y <= 50:
+            char.y = 50
+
+    if mod.keyboard.s and mode == 'game':
+        if char.image == "stand1" or char.image == "right1" or char.image == "right2":
+            if q == 0:
+                char.image = "stand1"
+                time.sleep(0.1)
+                q += 1
+            elif q == 1:
+                char.image = 'right1'
+                time.sleep(0.1)
+                q += 1
+            elif q == 2:
+                char.image = 'right2'
+                time.sleep(0.1)
+                q -= 2
+        else:
+            if q == 0:
+                char.image = "left1"
+                time.sleep(0.1)
+                q += 1
+            elif q == 1:
+                char.image = 'left2'
+                time.sleep(0.1)
+                q += 1
+            elif q == 2:
+                char.image = 'left3'
+                time.sleep(0.1)
+                q -= 2
+        char.y += 15
+        if char.y >= 700 - 50:
+            char.y = 700 - 50
 # ---------------------------LIGHT------------------------------------------------------------------
 # screen = pygame.display.set_mode((750, 750))
 # light = pygame.image.load('circle.png') # radial gradient used for light pattern

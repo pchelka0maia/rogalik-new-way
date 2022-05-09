@@ -1,6 +1,8 @@
 import pgzrun
-import sys
 import random
+import pygame
+import sys
+import os
 
 mod = sys.modules['__main__']
 
@@ -104,7 +106,7 @@ def draw_map():
                 cell3.left = cell.width * j
                 cell3.top = cell.height * i
                 cell3.draw()
-            # плита, через которую char должен переходить на другой level
+            # # плита, через которую char должен переходить на другой level
             elif my_map[i][j] == 4:
                 cell4.left = cell.width * j
                 cell4.top = cell.height * i
@@ -130,8 +132,8 @@ def draw():
         if (1 <= level) and (level <= 3): # от level'a будет зависеть отрисовка врагов на дисплее
             enemy12.draw()
         left2.draw()
-        mod.screen.draw.text("Press B to Back", topleft=(240, 320), color="white", fontsize=25)
-        mod.screen.draw.text("Press X to Attack", topleft=(80, 320), color="red", fontsize=25)
+        mod.screen.draw.text("Press Q to Back", topleft=(240, 320), color="white", fontsize=25)
+        mod.screen.draw.text("Press E to Attack", topleft=(80, 320), color="red", fontsize=25)
         mod.screen.draw.text(str(char.health), topleft=(260, 280), color="white", fontsize=25)
         mod.screen.draw.text(str(char.attack), topleft=(330, 280), color="white", fontsize=25)
         mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(110, 280), color="white", fontsize=25)
@@ -145,21 +147,21 @@ def on_key_down(key):
     old_i = char.i
     old_j = char.j
 
-    if mod.keyboard.right and mode == 'game':
+    if mod.keyboard.d and mode == 'game':
         if my_map[char.i][char.j + 1] != 0:
             char.j += 1
         char.x = cell.width * char.j
         char.image = "stand"
-    elif mod.keyboard.left and mode == 'game':
+    elif mod.keyboard.a and mode == 'game':
         if my_map[char.i][char.j - 1] != 0:
             char.j -= 1
         char.x = cell.width * char.j
         char.image = "left"
-    elif mod.keyboard.up and mode == 'game':
+    elif mod.keyboard.w and mode == 'game':
         if my_map[char.i - 1][char.j] != 0:
             char.i -= 1
         char.y = cell.height * char.i
-    elif mod.keyboard.down and mode == 'game':
+    elif mod.keyboard.s and mode == 'game':
         if my_map[char.i + 1][char.j] != 0:
             char.i += 1
         char.y = cell.height * char.i
@@ -174,18 +176,54 @@ def on_key_down(key):
             enemies.pop(enemy_index) # удаляем его из списка по номеру
             mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
-        if mod.keyboard.x and mode == 'attack':
+        if mod.keyboard.e and mode == 'attack':
             enemy.health -= char.attack  # Уменьшаем здоровье врага
             char.health -= enemy.attack  # Уменьшаем свое здоровье
         
-        if mod.keyboard.b and mode == 'attack':
+        if mod.keyboard.q and mode == 'attack':
             mode = 'game'
 
-    if mod.keyboard.a and enemies == []: # Переход на другой level
+    if mod.keyboard.e and enemies == []: # Переход на другой level
         level += 1
         draw_map()
         char.pos = cell.width, cell.height
         enemies_random()
 
+# ---------------------------LIGHT------------------------------------------------------------------
+# screen = pygame.display.set_mode((750, 750))
+# light = pygame.image.load('circle.png') # radial gradient used for light pattern
+#
+# player = pygame.image.load(os.path.join("hero.png")).convert_alpha() # load in player image, convert_alpha will keep transparent background
+#
+# player = pygame.transform.scale(player, (50, 50)) # resize player
+# light = pygame.transform.scale(light, (800,800)) # resize gradient
+#
+# night = True # boolean to set if it is night or day
+#
+# while True:
+#     for e in pygame.event.get():
+#         if e.type == pygame.QUIT:
+#             pygame.quit()
+#             sys.exit()
+#             break
+#
+#         if e.type == pygame.MOUSEBUTTONDOWN:
+#             night = not night # toggle night between true and false
+#
+#     pos = []
+#     pos = pygame.mouse.get_pos() # get mouse position
+#
+#     # screen.fill(pygame.color.Color('Red')) # just a background
+#     # for x in range(0, 640, 20):
+#     #     pygame.draw.line(screen, pygame.color.Color('Green'), (x, 0), (x, 480), 3)  # just lines on the background
+#
+#     if night: # if light effect needed
+#         filter = pygame.surface.Surface((750, 750)) # create surface same size as window
+#         filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
+#         filter.blit(light,(pos[0]-400,pos[1]-400)) # blit light to the filter surface -400 is to center effect
+#         screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
+#
+#     screen.blit(player, pos) # blit the player over the effect
+#     pygame.display.flip()
 enemies_random()
 pgzrun.go()

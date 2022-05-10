@@ -183,10 +183,12 @@ def on_key_down(key):
 
     if enemy_index != -1:  # если есть пересечения хоть с одним из врагов
         mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
+        not light.draw()
         enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
 
         if enemy.health <= 0 and mode == "attack": # Жизнь врага <0 ?
             enemies.pop(enemy_index) # удаляем его из списка по номеру
+            light.draw()
             mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
         if mod.keyboard.e and mode == 'attack':
@@ -196,8 +198,10 @@ def on_key_down(key):
         if mod.keyboard.q and mode == 'attack':
             if char.x + 100 != 700:
                 char.x += 100
+                light.x += 100
             else:
                 char.x -= 100
+                light.x -= 100
             mode = 'game'
 
     if mod.keyboard.e and enemies == []: # Переход на другой level

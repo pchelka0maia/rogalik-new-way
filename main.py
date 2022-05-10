@@ -172,12 +172,10 @@ def on_key_down(key):
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
 
     if enemy_index != -1:  # если есть пересечения хоть с одним из врагов
-        # if mod.keyboard.e and mode == 'game':
         mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
         enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
 
-        if enemy.health <= 0 and mode == "attack":
-            # Жизнь врага <0 ?
+        if enemy.health <= 0 and mode == "attack": # Жизнь врага <0 ?
             enemies.pop(enemy_index) # удаляем его из списка по номеру
             mode = 'game' # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
@@ -200,6 +198,11 @@ def on_key_down(key):
 
 def update(dt):
     global q
+    if not mod.keyboard.d and not mod.keyboard.s and not mod.keyboard.a and not mod.keyboard.w:
+        if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2' or char.image == 'up1':
+            char.image = 'stand1'
+        else:
+            char.image = 'left3'
     if mod.keyboard.d and mode == 'game':
         if q == 0:
             char.image = "stand1"
@@ -242,7 +245,11 @@ def update(dt):
         elif q == 1:
             char.image = 'up2'
             time.sleep(0.1)
-            q -= 1
+            q += 1
+        elif q == 2:
+            char.image = 'up1'
+            time.sleep(0.1)
+            q -= 2
 
         char.y -= 15
         if char.y <= 50:

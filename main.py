@@ -55,6 +55,7 @@ char.attack = 50
 char.i = 1
 char.j = 1
 
+light = mod.Actor("light2", center=(75, 75))
  # Enemy
 enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 # enemy = 0
@@ -118,6 +119,7 @@ def draw():
     # Режим игры
     if mode == 'game':
         draw_map()
+
         for enemy in enemies:
             enemy.draw()
         mod.screen.draw.text('HP:' + str(char.health), center=(cell.width * size_w - cell.width / 2, 10), color='white',
@@ -126,6 +128,7 @@ def draw():
                              fontsize=16)
         mod.screen.draw.text('Level:' + str(level), topleft=(10, 10), color='white', fontsize=16)
         char.draw()
+        light.draw()
     elif mode == 'attack':
         enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
         at1.draw()
@@ -148,6 +151,13 @@ def on_key_down(key):
 
     old_i = char.i
     old_j = char.j
+
+    # Полноэкранный режим
+    # if key == keys.F:
+    #     screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+    # elif key == keys.W:
+    #     screen.surface = pygame.display.set_mode((WIDTH, HEIGHT))
+
 
 
     # if mod.keyboard.d and mode == 'game':
@@ -217,8 +227,9 @@ def update(dt):
             time.sleep(0.1)
             q -= 2
         char.x += 15
+        light.x += 15
         if char.x >= 700 - 50:
-            char.x = 700 - 50
+            char.x = 700 - 75
 
     if mod.keyboard.a and mode == 'game':
         if q == 0:
@@ -234,8 +245,10 @@ def update(dt):
             time.sleep(0.1)
             q -= 2
         char.x -= 15
+        light.x -= 15
         if char.x <= 50:
             char.x = 50
+            light.x = 75
 
     if mod.keyboard.w and mode == 'game':
         if q == 0:
@@ -252,8 +265,10 @@ def update(dt):
             q -= 2
 
         char.y -= 15
+        light.y -= 15
         if char.y <= 50:
             char.y = 50
+            light.y = 75
 
     if mod.keyboard.s and mode == 'game':
         if char.image == "stand1" or char.image == "right1" or char.image == "right2":
@@ -283,43 +298,9 @@ def update(dt):
                 time.sleep(0.1)
                 q -= 2
         char.y += 15
+        light.y += 15
         if char.y >= 700 - 50:
             char.y = 700 - 50
-# ---------------------------LIGHT------------------------------------------------------------------
-# screen = pygame.display.set_mode((750, 750))
-# light = pygame.image.load('circle.png') # radial gradient used for light pattern
-#
-# player = pygame.image.load(os.path.join("hero.png")).convert_alpha() # load in player image, convert_alpha will keep transparent background
-#
-# player = pygame.transform.scale(player, (50, 50)) # resize player
-# light = pygame.transform.scale(light, (800,800)) # resize gradient
-#
-# night = True # boolean to set if it is night or day
-#
-# while True:
-#     for e in pygame.event.get():
-#         if e.type == pygame.QUIT:
-#             pygame.quit()
-#             sys.exit()
-#             break
-#
-#         if e.type == pygame.MOUSEBUTTONDOWN:
-#             night = not night # toggle night between true and false
-#
-#     pos = []
-#     pos = pygame.mouse.get_pos() # get mouse position
-#
-#     # screen.fill(pygame.color.Color('Red')) # just a background
-#     # for x in range(0, 640, 20):
-#     #     pygame.draw.line(screen, pygame.color.Color('Green'), (x, 0), (x, 480), 3)  # just lines on the background
-#
-#     if night: # if light effect needed
-#         filter = pygame.surface.Surface((750, 750)) # create surface same size as window
-#         filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
-#         filter.blit(light,(pos[0]-400,pos[1]-400)) # blit light to the filter surface -400 is to center effect
-#         screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
-#
-#     screen.blit(player, pos) # blit the player over the effect
-#     pygame.display.flip()
+            light.y = 700 - 75
 enemies_random()
 pgzrun.go()

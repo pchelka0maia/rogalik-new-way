@@ -38,10 +38,13 @@ cell3 = mod.Actor("crack")
 cell4 = mod.Actor("bones")
 
 # Дисплей атаки
-at1 = mod.Actor("at1", topleft=(50, 100))
-at_disp_1 = mod.Actor("at2", topleft=(80, 280))
-at_disp_2 = mod.Actor("at2", topleft=(230, 280))
-left3 = mod.Actor("left3", topleft=(250, 150)) # картинка chara
+at1 = mod.Actor("menu_at", topleft=(175, 150))
+ded = mod.Actor("ded12", topleft=(175, 150))
+at2 = mod.Actor("menu_at_z", topleft=(175, 150))
+
+# Дисплей меню
+menu = mod.Actor("menu1", topleft=(175, 150))
+
 
 
 # Char
@@ -66,6 +69,8 @@ q = 0
 w = 0
 w1 = True
 e = 0
+a = 0
+
 enemies = []
 def enemies_random():
     # Рандомим врагов
@@ -135,9 +140,8 @@ def draw_map():
 
 def draw():
     global prise
-
     # screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-
+    a = 0
     # Режим игры
     if mode == 'game':
         draw_map()
@@ -160,17 +164,21 @@ def draw():
     elif mode == 'attack':
         enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
         at1.draw()
-        at_disp_1.draw()
-        at_disp_2.draw()
-        if (1 <= level) and (level <= 3): # от level'a будет зависеть отрисовка врагов на дисплее
-            enemy12.draw()
-        left3.draw()
+        ded.draw()
+        at2.draw()
+
+        # if a == 0:
+        #     ded.image = 'ded22'
+        # elif a == 1:
+        #     ded.image = 'ded12'
+
+
         mod.screen.draw.text("Press Q to Back", topleft=(240, 320), color="white", fontsize=25)
         mod.screen.draw.text("Press E to Attack", topleft=(80, 320), color="red", fontsize=25)
-        mod.screen.draw.text(str(char.health), topleft=(260, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(char.attack), topleft=(330, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(110, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(180, 280), color="white", fontsize=25)
+        mod.screen.draw.text(str(char.health), topleft=(175+290, 150+225), color="white", fontsize=25)
+        mod.screen.draw.text(str(char.attack), topleft=(175+290, 150+255), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(260, 150+225), color="white", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(260, 150+255), color="white", fontsize=25)
 
     elif mode == "prise":
         # enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
@@ -183,6 +191,9 @@ def draw():
         mod.screen.draw.text(("Prise:"), topleft=(90, 280), color="white", fontsize=25)
         mod.screen.draw.text(str(prise), topleft=(150, 280), color="white", fontsize=25)
 
+    elif mode == "menu":
+        menu.draw()
+
 
 
 
@@ -191,12 +202,13 @@ def on_key_down(key):
 
     old_i = char.i
     old_j = char.j
-
+    if mod.keyboard.o:
+        mode = 'menu'
     # Полноэкранный режим
-    # if key == keys.F:
-    #     screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-    # elif key == keys.W:
-    #     screen.surface = pygame.display.set_mode((WIDTH, HEIGHT))
+    if mod.keyboard.l:
+        screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+    elif mod.keyboard.k:
+        screen.surface = pygame.display.set_mode((WIDTH, HEIGHT))
 
     # cell0_index = char.collidelist(cells)
     # if cell0_index != -1:
@@ -261,6 +273,7 @@ def update(dt):
     #             char.x += 1
     #     elif char.image == 'up1' or char.image == 'up2':
     #             char.y += 1
+
 
     if not mod.keyboard.d and not mod.keyboard.s and not mod.keyboard.a and not mod.keyboard.w:
         if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2' or char.image == 'up1':

@@ -20,7 +20,7 @@ my_map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0],
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-mobs = []
+
 
 cell = 50
 size_w = len(my_map[0])
@@ -36,6 +36,10 @@ cell1 = mod.Actor("floor")
 cell2 = mod.Actor("bones")
 cell3 = mod.Actor("crack")
 cell4 = mod.Actor("bones")
+fireball1 = mod.Actor("fireball1", center=(900, 900))
+fireball2 = mod.Actor("fireball2", center=(900, 900))
+level_hod = mod.Actor("level_hod", topleft=(175, 150))
+level1 = mod.Actor("level1", topleft=(-50, -50))
 
 # Дисплей атаки
 at1 = mod.Actor("menu_at", topleft=(175, 150))
@@ -44,7 +48,6 @@ at2 = mod.Actor("menu_at_z", topleft=(175, 150))
 
 # Дисплей меню
 menu = mod.Actor("menu1", topleft=(175, 150))
-
 
 
 # Char
@@ -63,25 +66,31 @@ enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 
 # Переменные
 mode = 'game'
+money = 0
 level = 1
 prise = 0
 q = 0
 w = 0
 w1 = True
 e = 0
-a = 0
+
+# Списки
+mobs = []
+cells_mobs = []
+
 
 enemies = []
-def enemies_random():
+def enemies_random(N):
     # Рандомим врагов
-    global level, a
-    if (1 <= level) and (level <= 3):
-        for i in range(8):
+    global level
+    a = 0
+    if 1 <= level <= 5:
+        for i in range(N):
             x = random.randint(1, len(my_map[0]) - 2)
             y = random.randint(1, len(my_map) - 2)
 
-            if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
-                while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
+            if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
                     x = random.randint(1, len(my_map[0]) - 2)
                     y = random.randint(1, len(my_map) - 2)
             a = random.randint(1, 3)
@@ -102,6 +111,60 @@ def enemies_random():
                 enemies.append(enemy)  # добавляем врага в список
             mobs.append([y, x])  # добавляем координаты в список мобов
 
+    if 6 <= level <= 7:
+        for i in range(N):
+            x = random.randint(1, len(my_map[0]) - 2)
+            y = random.randint(1, len(my_map) - 2)
+
+            if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                    x = random.randint(1, len(my_map[0]) - 2)
+                    y = random.randint(1, len(my_map) - 2)
+            a = random.randint(1, 3)
+            if a == 1:
+                enemy = mod.Actor('enemy_g1', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 75 # здоровье врага
+                enemy.attack = 20 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            elif a == 2:
+                enemy = mod.Actor('enemy_g2', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 125 # здоровье врага
+                enemy.attack = 25 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            else:
+                enemy = mod.Actor('enemy_g3', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 175 # здоровье врага
+                enemy.attack = 15 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            mobs.append([y, x])  # добавляем координаты в список мобов
+
+    if 8 <= level <= 10:
+        for i in range(N):
+            x = random.randint(1, len(my_map[0]) - 2)
+            y = random.randint(1, len(my_map) - 2)
+
+            if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                    x = random.randint(1, len(my_map[0]) - 2)
+                    y = random.randint(1, len(my_map) - 2)
+            a = random.randint(1, 3)
+            if a == 1:
+                enemy = mod.Actor('enemy_g1', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 100 # здоровье врага
+                enemy.attack = 25 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            elif a == 2:
+                enemy = mod.Actor('enemy_g2', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 150 # здоровье врага
+                enemy.attack = 30 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            else:
+                enemy = mod.Actor('enemy_g3', topleft=(x * cell.width, y * cell.height))
+                enemy.health = 200 # здоровье врага
+                enemy.attack = 20 # атака врага
+                enemies.append(enemy)  # добавляем врага в список
+            mobs.append([y, x])  # добавляем координаты в список мобов
+
 cells = []
 
 def cell_random():
@@ -109,14 +172,24 @@ def cell_random():
         x = random.randint(1, len(my_map[0]) - 2)
         y = random.randint(1, len(my_map) - 2)
 
-        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
-            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs:
+        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
                 x = random.randint(1, len(my_map[0]) - 2)
                 y = random.randint(1, len(my_map) - 2)
         cell0 = mod.Actor('border', topleft=(x * cell.width, y * cell.height))
         cell0.health = 30
         cells.append(cell0)
-        mobs.append([y, x])
+        cells_mobs.append([y, x])
+
+def level_random():
+    x = random.randint(1, len(my_map[0]) - 2)
+    y = random.randint(1, len(my_map) - 2)
+
+    if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+        while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+            x = random.randint(1, len(my_map[0]) - 2)
+            y = random.randint(1, len(my_map) - 2)
+    level1.pos = (x * cell.width, y * cell.height)
 
 def draw_map():
     for i in range(len(my_map)):
@@ -139,7 +212,7 @@ def draw_map():
                 cell3.draw()
 
 def draw():
-    global prise
+    global prise, money
     # screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
     a = 0
     # Режим игры
@@ -151,45 +224,65 @@ def draw():
 
         for enemy in enemies:
             enemy.draw()
-
+        level1.draw()
         char.draw()
         light.draw()
 
-        mod.screen.draw.text('HP:' + str(char.health), center=(cell.width * size_w - cell.width / 2, 10), color='white',
+        mod.screen.draw.text('HP:' + str(char.health), topright=(cell.width * size_w - 5, 10), color='white',
                              fontsize=16)
-        mod.screen.draw.text('AP:' + str(char.attack), center=(cell.width * size_w - cell.width / 2, 25), color='white',
+        mod.screen.draw.text('AP:' + str(char.attack), topright=(cell.width * size_w - 5, 25), color='white',
                              fontsize=16)
-        mod.screen.draw.text('Level:' + str(level), topleft=(10, 10), color='white', fontsize=16)
+        mod.screen.draw.text('Money:' + str(char.attack), topright=(cell.width * size_w - 5, 40), color='white',
+                             fontsize=16)
+        mod.screen.draw.text('Level:' + str(level), center=(375, 20), color='white', fontsize=16)
 
     elif mode == 'attack':
         enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
         at1.draw()
         ded.draw()
         at2.draw()
+        fireball1.draw()
+        fireball2.draw()
+        mod.screen.draw.text("Press Q to Back", topleft=(400, 460), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text("Press E to Attack", topleft=(200, 460), color="#8B0000", fontsize=25)
+        mod.screen.draw.text(str(char.health), topleft=(175+290, 150+225), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(char.attack), topleft=(175+290, 150+255), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(260, 150+225), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(260, 150+255), color="#E0FFFF", fontsize=25)
 
-        # if a == 0:
-        #     ded.image = 'ded22'
-        # elif a == 1:
-        #     ded.image = 'ded12'
-
-
-        mod.screen.draw.text("Press Q to Back", topleft=(240, 320), color="white", fontsize=25)
-        mod.screen.draw.text("Press E to Attack", topleft=(80, 320), color="red", fontsize=25)
-        mod.screen.draw.text(str(char.health), topleft=(175+290, 150+225), color="white", fontsize=25)
-        mod.screen.draw.text(str(char.attack), topleft=(175+290, 150+255), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].health), topleft=(260, 150+225), color="white", fontsize=25)
-        mod.screen.draw.text(str(enemies[enemy_index].attack), topleft=(260, 150+255), color="white", fontsize=25)
 
     elif mode == "prise":
         # enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
-        prise = 10
+        if 1 <= level <= 3:
+            prise = 15
+            money = 30
+        elif 4 <= level <= 5:
+            prise = 20
+            money = 50
+        elif 6 <= level <= 7:
+            prise = 25
+            money = 75
+        elif 8 <= level <= 10:
+            prise = 40
+            money = 100
         at1.draw()
-        left3.draw()
-        mod.screen.draw.text("Press E to Take a prise", topleft=(80, 320), color="red", fontsize=25)
-        mod.screen.draw.text(str(char.health), topleft=(260, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(char.attack), topleft=(330, 280), color="white", fontsize=25)
-        mod.screen.draw.text(("Prise:"), topleft=(90, 280), color="white", fontsize=25)
-        mod.screen.draw.text(str(prise), topleft=(150, 280), color="white", fontsize=25)
+        ded.draw()
+        at2.draw()
+        mod.screen.draw.text("Press E to Take a prise", topleft=(200, 460), color="#8B0000", fontsize=25)
+        mod.screen.draw.text(str(char.health), topleft=(175+290, 150+225), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(char.attack), topleft=(175+290, 150+255), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text('---', topleft=(260, 150+225), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text('---', topleft=(260, 150+255), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text("Prise:", topleft=(200, 200), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text("HP:", topleft=(200, 230), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text("Money:", topleft=(200, 260), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(prise), topleft=(240, 230), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(money), topleft=(270, 260), color="#E0FFFF", fontsize=25)
+
+    elif mode == 'level':
+        level_hod.draw()
+        mod.screen.draw.text("Press E for next Level", topleft=(200, 460), color="#8B0000", fontsize=25)
+        mod.screen.draw.text("Next Level ?", topleft=(175+50, 150+50), color="#E0FFFF", fontsize=25)
 
     elif mode == "menu":
         menu.draw()
@@ -219,6 +312,7 @@ def on_key_down(key):
     #     elif char.image == 'up1' or char.image == 'up2':
     #             char.y += 1
 
+
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
 
     if mod.keyboard.e and mode == 'prise':
@@ -236,19 +330,27 @@ def on_key_down(key):
             mode = 'prise'
 
         if mod.keyboard.e and mode == 'attack':
+            fireball1.pos=(475, 240)
+            animate(fireball1, pos=(-30, 240), tween='decelerate', duration=2)
             enemy.health -= char.attack  # Уменьшаем здоровье врага
+            fireball2.pos=(275, 240)
+            animate(fireball2, pos=(800, 240), tween='decelerate', duration=2)
             char.health -= enemy.attack  # Уменьшаем свое здоровье
+
 
         if mod.keyboard.q and mode == 'attack':
             if char.image == char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
-                char.x = enemy.x - 100
-                light.x = enemy.x - 100
+                char.x = enemy.x - 80
+                light.x = enemy.x - 55
             if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
-                char.x = enemy.x + 100
-                light.x = enemy.x + 100
+                char.x = enemy.x + 25
+                light.x = enemy.x + 50
             if char.image == 'up1' or char.image == 'up2':
-                char.y = enemy.y + 100
-                light.y = enemy.y + 100
+                char.y = enemy.y + 25
+                light.y = enemy.y + 50
+            if char.image == 'down1' or char.image == 'down2':
+                char.y = enemy.y - 80
+                light.y = enemy.y - 55
             # if char.x + 100 != 700:
             #     char.x += 100
             #     light.x += 100
@@ -257,14 +359,31 @@ def on_key_down(key):
             #     light.x -= 100
             mode = 'game'
 
-    if mod.keyboard.e and enemies == []: # Переход на другой level
+    # level mode
+    if char.colliderect(level1):
+        mode = 'level'
+    if mod.keyboard.q and mode == 'level':
+        mode = 'game'
+        if char.image == char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
+            char.x = level1.x - 80
+            light.x = level1.x - 55
+        if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
+            char.x = level1.x + 25
+            light.x = level1.x + 50
+        if char.image == 'up1' or char.image == 'up2':
+            char.y = level1.y + 25
+            light.y = level1.y + 50
+        if char.image == 'down1' or char.image == 'down2':
+            char.y = level1.y - 80
+            light.y = level1.y - 55
+
+    if mod.keyboard.e and mode == 'level': # Переход на другой level
         level += 1
-        draw_map()
-        char.pos = cell.width, cell.height
-        enemies_random()
+
+
 
 def update(dt):
-    global q, cell0
+    global q, cell0, cells_mobs
     # cell0_index = char.collidelist(cells)
     # if cell0_index != -1:
     #     if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
@@ -274,11 +393,10 @@ def update(dt):
     #     elif char.image == 'up1' or char.image == 'up2':
     #             char.y += 1
 
-
     if not mod.keyboard.d and not mod.keyboard.s and not mod.keyboard.a and not mod.keyboard.w:
-        if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2' or char.image == 'up1':
+        if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
             char.image = 'stand1'
-        else:
+        if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
             char.image = 'left3'
     if mod.keyboard.d and mode == 'game':
         if q == 0:
@@ -339,37 +457,33 @@ def update(dt):
             light.y = 75
 
     if mod.keyboard.s and mode == 'game':
-        if char.image == "stand1" or char.image == "right1" or char.image == "right2":
-            if q == 0:
-                char.image = "stand1"
-                time.sleep(0.1)
-                q += 1
-            elif q == 1:
-                char.image = 'right1'
-                time.sleep(0.1)
-                q += 1
-            elif q == 2:
-                char.image = 'right2'
-                time.sleep(0.1)
-                q -= 2
-        else:
-            if q == 0:
-                char.image = "left1"
-                time.sleep(0.1)
-                q += 1
-            elif q == 1:
-                char.image = 'left2'
-                time.sleep(0.1)
-                q += 1
-            elif q == 2:
-                char.image = 'left3'
-                time.sleep(0.1)
-                q -= 2
+        if q == 0:
+            char.image = "down1"
+            time.sleep(0.1)
+            q += 1
+        elif q == 1:
+            char.image = 'down2'
+            time.sleep(0.1)
+            q += 1
+        elif q == 2:
+            char.image = 'down1'
+            time.sleep(0.1)
+            q -= 2
+
         char.y += 15
         light.y += 15
         if char.y >= 550 - 50:
             char.y = 550 - 50
             light.y = 550 - 25
-enemies_random()
+
+if 1 <= level <= 3:
+    enemies_random(5)
+elif 4 <= level <= 5:
+    enemies_random(8)
+elif 6 <= level <= 7:
+    enemies_random(8)
+elif 8 <= level <= 10:
+    enemies_random(10)
 cell_random()
+level_random()
 pgzrun.go()

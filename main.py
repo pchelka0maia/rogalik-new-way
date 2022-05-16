@@ -293,8 +293,8 @@ def draw():
 def on_key_down(key):
     global mode, enemy, i, j, level
 
-    old_i = char.i
-    old_j = char.j
+    old_i = char.x
+    old_j = char.y
     if mod.keyboard.o:
         mode = 'menu'
     # Полноэкранный режим
@@ -320,7 +320,8 @@ def on_key_down(key):
         light.draw()
         mode = 'game'  # ПЕРЕКЛЮЧАЛКА В ИГРУ
 
-    if enemy_index != -1:# если есть пересечения хоть с одним из врагов
+    if enemy_index != -1:# если есть пересечения хоть с одним из врагов 
+        # Это делаем, если пересечения с врагами есть!
         mode = 'attack' # ПЕРЕКЛЮЧАЛКА В АТАКУ
         not light.draw()
         enemy = enemies[enemy_index] # в enemy сохраняем Actor врага
@@ -411,8 +412,14 @@ def update(dt):
             char.image = 'right2'
             time.sleep(0.1)
             q -= 2
-        char.x += 15
-        light.x += 15
+        
+        char.x += 10
+        light.x += 10
+        
+        if char.collidelist(cells) != -1:
+            char.x -= 10
+            light.x -= 10
+
         if char.x >= 700 - 50:
             char.x = 700 - 50
             light.x = 700 - 25
@@ -430,8 +437,13 @@ def update(dt):
             char.image = 'left3'
             time.sleep(0.1)
             q -= 2
-        char.x -= 15
-        light.x -= 15
+        char.x -= 10
+        light.x -= 10
+
+        if char.collidelist(cells) != -1:
+            char.x += 10
+            light.x += 10
+
         if char.x <= 50:
             char.x = 50
             light.x = 75
@@ -450,8 +462,13 @@ def update(dt):
             time.sleep(0.1)
             q -= 2
 
-        char.y -= 15
-        light.y -= 15
+        char.y -= 10
+        light.y -= 10
+
+        if char.collidelist(cells) != -1:
+            char.y += 10
+            light.y += 10
+
         if char.y <= 50:
             char.y = 50
             light.y = 75
@@ -470,8 +487,13 @@ def update(dt):
             time.sleep(0.1)
             q -= 2
 
-        char.y += 15
-        light.y += 15
+        char.y += 10
+        light.y += 10
+
+        if char.collidelist(cells) != -1:
+            char.y -= 10
+            light.y -= 10
+
         if char.y >= 550 - 50:
             char.y = 550 - 50
             light.y = 550 - 25

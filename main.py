@@ -39,7 +39,7 @@ cell4 = mod.Actor("bones")
 fireball1 = mod.Actor("fireball1", center=(900, 900))
 fireball2 = mod.Actor("fireball2", center=(900, 900))
 level_hod = mod.Actor("level_hod", topleft=(175, 150))
-level1 = mod.Actor("level1", topleft=(-50, -50))
+level1 = mod.Actor("level1", topleft=(-50, -50), anchor=('left', 'top'))
 
 # Дисплей атаки
 at1 = mod.Actor("menu_at", topleft=(175, 150))

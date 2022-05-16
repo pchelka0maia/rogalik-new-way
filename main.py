@@ -340,18 +340,19 @@ def on_key_down(key):
 
 
         if mod.keyboard.q and mode == 'attack':
+            mode = "game"
             if char.image == char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
-                char.x = enemy.x - 80
-                light.x = enemy.x - 55
+                char.x -= 10
+                light.x -= 10               
             if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
-                char.x = enemy.x + 25
-                light.x = enemy.x + 50
+                char.x += 10
+                light.x += 10
             if char.image == 'up1' or char.image == 'up2':
-                char.y = enemy.y + 25
-                light.y = enemy.y + 50
+                char.y += 10
+                light.y += 10
             if char.image == 'down1' or char.image == 'down2':
-                char.y = enemy.y - 80
-                light.y = enemy.y - 55
+                char.y -= 10
+                light.y -= 10
             # if char.x + 100 != 700:
             #     char.x += 100
             #     light.x += 100
@@ -384,7 +385,7 @@ def on_key_down(key):
 
 
 def update(dt):
-    global q, cell0, cells_mobs
+    global q, cell0, cells_mobs, mode
     # cell0_index = char.collidelist(cells)
     # if cell0_index != -1:
     #     if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
@@ -393,6 +394,10 @@ def update(dt):
     #             char.x += 1
     #     elif char.image == 'up1' or char.image == 'up2':
     #             char.y += 1
+
+    # Проверяем пересечение с врагом, если да, то режим атаки
+    if char.collidelist(enemies) != -1:
+            mode = 'attack'
 
     if not mod.keyboard.d and not mod.keyboard.s and not mod.keyboard.a and not mod.keyboard.w:
         if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':

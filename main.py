@@ -367,17 +367,17 @@ def on_key_down(key):
     if mod.keyboard.q and mode == 'level':
         mode = 'game'
         if char.image == char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
-            char.x = level1.x - 80
-            light.x = level1.x - 55
+            char.x -= 10
+            light.x -= 10
         if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
-            char.x = level1.x + 25
-            light.x = level1.x + 50
+            char.x += 10
+            light.x += 10
         if char.image == 'up1' or char.image == 'up2':
-            char.y = level1.y + 25
-            light.y = level1.y + 50
+            char.y += 10
+            light.y += 10
         if char.image == 'down1' or char.image == 'down2':
-            char.y = level1.y - 80
-            light.y = level1.y - 55
+            char.y -= 10
+            light.y -= 10
 
     if mod.keyboard.e and mode == 'level': # Переход на другой level
         level += 1

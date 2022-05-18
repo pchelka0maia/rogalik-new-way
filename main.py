@@ -67,7 +67,7 @@ enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 
 # Переменные
 mode = 'game'
-money = 0
+mana_char = 0
 level = 1
 prise = 0
 q = 0
@@ -170,17 +170,17 @@ def enemies_random(N):
 cells = []
 
 def cell_random():
-    for i in range(30):
-        x = random.randint(1, len(my_map[0]) - 2)
-        y = random.randint(1, len(my_map) - 2)
+    for i in range(25):
+            x = random.randint(1, len(my_map[0]) - 2)
+            y = random.randint(1, len(my_map) - 2)
 
-        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
-            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
-                x = random.randint(1, len(my_map[0]) - 2)
-                y = random.randint(1, len(my_map) - 2)
-        cell0 = mod.Actor('border', topleft=(x * cell.width, y * cell.height))
-        cells.append(cell0)
-        cells_mobs.append([y, x])
+            if (x == 1 and y == 1) or (x == 2 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 2) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                while (x == 1 and y == 1) or (x == 2 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 2) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                    x = random.randint(1, len(my_map[0]) - 2)
+                    y = random.randint(1, len(my_map) - 2)
+            cell0 = mod.Actor('border', topleft=(x * cell.width, y * cell.height))
+            cells.append(cell0)
+            cells_mobs.append([y, x])
 
 bones = []
 
@@ -212,6 +212,36 @@ def cracks_random(N):
         cracks.append(crack)
         mobs.append([y, x])
 
+hilki = []
+
+def hilka_random(N):
+    for i in range(N):
+        x = random.randint(1, len(my_map[0]) - 2)
+        y = random.randint(1, len(my_map) - 2)
+
+        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                x = random.randint(1, len(my_map[0]) - 2)
+                y = random.randint(1, len(my_map) - 2)
+        hilka = mod.Actor('hilka1', topleft=(x * cell.width, y * cell.height))
+        hilki.append(hilka)
+        mobs.append([y, x])
+
+manas = []
+def mana_random(N):
+    for i in range(N):
+        x = random.randint(1, len(my_map[0]) - 2)
+        y = random.randint(1, len(my_map) - 2)
+
+        if (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+            while (x == 1 and y == 1) or my_map[y][x] == 0 or [y, x] in mobs or [y, x] in cells_mobs:
+                x = random.randint(1, len(my_map[0]) - 2)
+                y = random.randint(1, len(my_map) - 2)
+        mana = mod.Actor('hilka2', topleft=(x * cell.width, y * cell.height))
+        manas.append(mana)
+        mobs.append([y, x])
+
+
 def level_random():
     x = random.randint(1, len(my_map[0]) - 2)
     y = random.randint(1, len(my_map) - 2)
@@ -241,12 +271,7 @@ def draw_map():
                 cell3.left = cell.width * j
                 cell3.top = cell.height * i
                 cell3.draw()
-
-def draw():
-    global prise, money, d, level
-    # screen.surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-    a = 0
-    # Режим игры
+def level_draw():
     if mode == 'game':
         draw_map()
 
@@ -261,6 +286,12 @@ def draw():
 
         for crack in cracks:
             crack.draw()
+
+        for hilka in hilki:
+            hilka.draw()
+
+        for mana in manas:
+            mana.draw()
         level1.draw()
         char.draw()
         bomb.draw()
@@ -270,9 +301,19 @@ def draw():
                              fontsize=16)
         mod.screen.draw.text('AP:' + str(char.attack), topright=(cell.width * size_w - 5, 25), color='white',
                              fontsize=16)
-        mod.screen.draw.text('Money:' + str(char.attack), topright=(cell.width * size_w - 5, 40), color='white',
+        mod.screen.draw.text('Mana:' + str(mana_char), topright=(cell.width * size_w - 5, 40), color='white',
                              fontsize=16)
         mod.screen.draw.text('Level:' + str(level), center=(375, 20), color='white', fontsize=16)
+def draw():
+    global prise, money, d, level
+    screen.clear
+    a = 0
+    # Режим игры
+    if 1 <= level <= 9:
+        level_draw()
+    if level == 10:
+        if mode == 'game':
+            draw_map()
 
     elif mode == 'attack':
         enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
@@ -293,16 +334,12 @@ def draw():
         # enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
         if 1 <= level <= 3:
             prise = 15
-            money = 30
         elif 4 <= level <= 5:
             prise = 20
-            money = 50
         elif 6 <= level <= 7:
             prise = 25
-            money = 75
         elif 8 <= level <= 10:
             prise = 40
-            money = 100
         at1.draw()
         ded.draw()
         at2.draw()
@@ -315,7 +352,7 @@ def draw():
         mod.screen.draw.text("HP:", topleft=(200, 230), color="#E0FFFF", fontsize=25)
         mod.screen.draw.text("Money:", topleft=(200, 260), color="#E0FFFF", fontsize=25)
         mod.screen.draw.text(str(prise), topleft=(240, 230), color="#E0FFFF", fontsize=25)
-        mod.screen.draw.text(str(money), topleft=(270, 260), color="#E0FFFF", fontsize=25)
+        mod.screen.draw.text(str(mana_char), topleft=(270, 260), color="#E0FFFF", fontsize=25)
 
     elif mode == 'level':
         level_hod.draw()
@@ -330,69 +367,71 @@ def draw():
             if d_r == 1:
                 mod.screen.draw.text("I'm feel good", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             else:
-                mod.screen.draw.text("Let's work", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Let's work", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
             if d_r == 1:
-                mod.screen.draw.text("Monsters...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Monsters...", topleft=(char.x, char.y - 20), color='white', fontsize=16)
             else:
-                mod.screen.draw.text("Scary... but I'm fine", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Scary... but I'm fine", topleft=(char.x - 30, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
             if d_r == 1:
-                mod.screen.draw.text("I have goosebumps...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I have goosebumps...", topleft=(char.x - 30, char.y - 20), color='white', fontsize=16)
             elif d_r == 2:
                 mod.screen.draw.text("I feel uneasy...", topleft=(char.x - 10, char.y - 20), color='white',
                                      fontsize=16)
             else:
-                mod.screen.draw.text("Well...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Well...", topleft=(char.x + 10, char.y - 20), color='white', fontsize=16)
         elif 8 <= level <= 10:
             if d_r == 1:
-                mod.screen.draw.text("I just wanna leave this place", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I just wanna leave this place", topleft=(char.x - 50, char.y - 20), color='white', fontsize=16)
             elif d_r == 2:
-                mod.screen.draw.text("Too many bones...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Too many bones...", topleft=(char.x - 20, char.y - 20), color='white', fontsize=16)
             elif d_r == 3:
-                mod.screen.draw.text("I feel sick...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I feel sick...", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
             elif d_r == 4:
-                mod.screen.draw.text("How many are there?..", topleft=(char.x - 10, char.y - 20), color='white',
+                mod.screen.draw.text("How many are there?..", topleft=(char.x - 30, char.y - 20), color='white',
                                      fontsize=16)
             else:
-                mod.screen.draw.text("...", topleft=(char.x - 10, char.y - 20), color='white',
+                mod.screen.draw.text("...", topleft=(char.x + 20, char.y - 20), color='white',
                                      fontsize=16)
 
     if d == 2:
         if 1 <= level <= 3:
-            mod.screen.draw.text("The hatch I need", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("The hatch I need", topleft=(char.x - 15, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
-            mod.screen.draw.text("Another hatch", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Another hatch", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
-            mod.screen.draw.text("Jast go down", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
-        elif 8 <= level <= 9:
-            mod.screen.draw.text("Left a little", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Jast go down", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
+        elif level == 8:
+            mod.screen.draw.text("Left a little", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         else:
-            mod.screen.draw.text("The end", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("The end", topleft=(char.x + 5, char.y - 20), color='white', fontsize=16)
 
     if d == 3:
         if 1 <= level <= 3:
-            mod.screen.draw.text("It's someone bones", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("It's someone bones", topleft=(char.x - 20, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
-            mod.screen.draw.text("It's monster's bones... Probably", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("It's monster's bones... Probably", topleft=(char.x - 50, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
-            mod.screen.draw.text("I think it isn't monster's...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("I think it isn't monster's...", topleft=(char.x - 35, char.y - 20), color='white', fontsize=16)
         elif 8 <= level <= 9:
-            mod.screen.draw.text("Too many bones...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Too many bones...", topleft=(char.x - 20, char.y - 20), color='white', fontsize=16)
 
     if d == 4:
         if 1 <= level <= 3:
             mod.screen.draw.text("It's just a blot", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
-            mod.screen.draw.text("Okey. It isn't blot...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Okey. It isn't blot...", topleft=(char.x - 20, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
-            mod.screen.draw.text("Looks like blood...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Looks like blood...", topleft=(char.x - 20, char.y - 20), color='white', fontsize=16)
         elif 8 <= level <= 9:
-            mod.screen.draw.text("...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
-
+            mod.screen.draw.text("...", topleft=(char.x + 20, char.y - 20), color='white', fontsize=16)
+    if d == 5 or d == 6:
+        mod.screen.draw.text("Pick up...?", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
+        mod.screen.draw.text("Press E", topleft=(char.x + 50, char.y + 20), color='white', fontsize=20)
 
 def on_key_down(key):
-    global mode, enemy, i, j, level
+    global mode, enemy, i, j, level, mana_char
 
     old_i = char.x
     old_j = char.y
@@ -404,6 +443,13 @@ def on_key_down(key):
     elif mod.keyboard.k:
         screen.surface = pygame.display.set_mode((WIDTH, HEIGHT))
 
+    if char.collidelist(hilki) != -1 and mod.keyboard.e:
+        char.health += 15
+        hilki.pop(char.collidelist(hilki))
+
+    if char.collidelist(manas) != -1 and mod.keyboard.e:
+        mana_char += 1
+        manas.pop(char.collidelist(manas))
 
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
 
@@ -466,25 +512,8 @@ def on_key_down(key):
 
     if mod.keyboard.e and mode == 'level': # Переход на другой level
         level += 1
+        mode = 'game'
 
-    # # bombs
-    # if mod.keyboard.b and mode == 'game':
-    #     if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
-    #         bomb.draw()
-    #         bomb.pos = (char.x, char.y)
-    #         animate(bomb, pos=(char.x + 100, char.y), tween='linear', duration=2)
-    #     if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
-    #         bomb.draw()
-    #         bomb.pos = (char.x, char.y)
-    #         animate(bomb, pos=(char.x - 100, char.y), tween='linear', duration=2)
-    #     if char.image == 'up1' or char.image == 'up2':
-    #         bomb.draw()
-    #         bomb.pos = (char.x, char.y)
-    #         animate(bomb, pos=(char.x, char.y - 100), tween='linear', duration=2)
-    #     if char.image == 'down1' or char.image == 'down2':
-    #         bomb.draw()
-    #         bomb.pos = (char.x, char.y)
-    #         animate(bomb, pos=(char.x, char.y + 100), tween='linear', duration=2)
 
 
 def update(dt):
@@ -495,6 +524,13 @@ def update(dt):
 
     if char.collidelist(cracks) != -1:
         d = 4
+
+    if char.collidelist(hilki) != -1:
+        d = 5
+
+    if char.collidelist(manas) != -1:
+        d = 6
+
     # Проверяем пересечение с врагом, если да, то режим атаки
     if char.collidelist(enemies) != -1:
             mode = 'attack'
@@ -656,7 +692,7 @@ elif 4 <= level <= 5:
     enemies_random(8)
 elif 6 <= level <= 7:
     enemies_random(8)
-elif 8 <= level <= 10:
+elif 8 <= level <= 9:
     enemies_random(10)
 
 cell_random()
@@ -667,7 +703,7 @@ elif 4 <= level <= 5:
     bones_random(4)
 elif 6 <= level <= 7:
     bones_random(5)
-elif 8 <= level <= 10:
+elif 8 <= level <= 9:
     bones_random(7)
 
 if 1 <= level <= 3:
@@ -676,8 +712,26 @@ elif 4 <= level <= 5:
     cracks_random(3)
 elif 6 <= level <= 7:
     cracks_random(4)
-elif 8 <= level <= 10:
+elif 8 <= level <= 9:
     cracks_random(6)
 
+if 1 <= level <= 3:
+    hilka_random(2)
+elif 4 <= level <= 5:
+    hilka_random(4)
+elif 6 <= level <= 7:
+    hilka_random(5)
+elif 8 <= level <= 9:
+    hilka_random(6)
+
+if 1 <= level <= 3:
+    mana_random(2)
+elif 4 <= level <= 5:
+    mana_random(4)
+elif 6 <= level <= 7:
+    mana_random(4)
+elif 8 <= level <= 9:
+    mana_random(4)
+mana_char = len(manas)
 level_random()
 pgzrun.go()

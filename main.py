@@ -328,51 +328,67 @@ def draw():
     if d == 1:
         if 1 <= level <= 3:
             if d_r == 1:
-                mod.screen.draw.text("I'm feel good", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I'm feel good", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             else:
-                mod.screen.draw.text("Let's work", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Let's work", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
             if d_r == 1:
-                mod.screen.draw.text("Monsters...", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Monsters...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             else:
-                mod.screen.draw.text("Scary... but I'm fine", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Scary... but I'm fine", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
             if d_r == 1:
-                mod.screen.draw.text("I have goosebumps...", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I have goosebumps...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             elif d_r == 2:
-                mod.screen.draw.text("I feel uneasy...", topleft=(char.x + 30, char.y - 20), color='white',
+                mod.screen.draw.text("I feel uneasy...", topleft=(char.x - 10, char.y - 20), color='white',
                                      fontsize=16)
             else:
-                mod.screen.draw.text("Well...", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Well...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 8 <= level <= 10:
             if d_r == 1:
-                mod.screen.draw.text("I just wanna leave this place", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("I just wanna leave this place", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             elif d_r == 2:
-                mod.screen.draw.text("Too many bones...", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+                mod.screen.draw.text("Too many bones...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             elif d_r == 3:
-                mod.screen.draw.text("...", topleft=(char.x + 30, char.y - 20), color='white',
-                                     fontsize=16)
+                mod.screen.draw.text("I feel sick...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
             elif d_r == 4:
-                mod.screen.draw.text("I feel sick...", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
-            elif d_r == 5:
-                mod.screen.draw.text("How many are there?..", topleft=(char.x + 30, char.y - 20), color='white',
+                mod.screen.draw.text("How many are there?..", topleft=(char.x - 10, char.y - 20), color='white',
                                      fontsize=16)
             else:
-                mod.screen.draw.text("...", topleft=(char.x + 30, char.y - 20), color='white',
+                mod.screen.draw.text("...", topleft=(char.x - 10, char.y - 20), color='white',
                                      fontsize=16)
 
     if d == 2:
         if 1 <= level <= 3:
-            mod.screen.draw.text("The hatch I need", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("The hatch I need", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 4 <= level <= 5:
-            mod.screen.draw.text("Another hatch", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Another hatch", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
-            mod.screen.draw.text("Jast go down", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Jast go down", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         elif 8 <= level <= 9:
-            mod.screen.draw.text("Left a little", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Left a little", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
         else:
-            mod.screen.draw.text("That' end", topleft=(char.x + 30, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("The end", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
 
+    if d == 3:
+        if 1 <= level <= 3:
+            mod.screen.draw.text("It's someone bones", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 4 <= level <= 5:
+            mod.screen.draw.text("It's monster's bones... Probably", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 6 <= level <= 7:
+            mod.screen.draw.text("I think it isn't monster's...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 8 <= level <= 9:
+            mod.screen.draw.text("Too many bones...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+
+    if d == 4:
+        if 1 <= level <= 3:
+            mod.screen.draw.text("It's just a blot", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 4 <= level <= 5:
+            mod.screen.draw.text("Okey. It isn't blot...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 6 <= level <= 7:
+            mod.screen.draw.text("Looks like blood...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
+        elif 8 <= level <= 9:
+            mod.screen.draw.text("...", topleft=(char.x - 10, char.y - 20), color='white', fontsize=16)
 
 
 def on_key_down(key):
@@ -472,11 +488,13 @@ def on_key_down(key):
 
 
 def update(dt):
-    global q, cell0, cells_mobs, mode, d
+    global q, cell0, cells_mobs, mode, d, d_r
 
-    # if char.collidelist(bones) != -1:
-    #     mod.screen.draw.text("It's monster's bones. Probably...", topleft=(char.x + 25, char.y - 25), color='#800080', fontsize=20)
+    if char.collidelist(bones) != -1:
+        d = 3
 
+    if char.collidelist(cracks) != -1:
+        d = 4
     # Проверяем пересечение с врагом, если да, то режим атаки
     if char.collidelist(enemies) != -1:
             mode = 'attack'

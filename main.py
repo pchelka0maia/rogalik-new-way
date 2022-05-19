@@ -67,7 +67,7 @@ enemy12 = mod.Actor("enemy12", topleft=(100, 150)) # картинка enemy
 
 # Переменные
 mode = 'game'
-mana_char = 0
+mana_char_kol = 5
 level = 1
 prise = 0
 q = 0
@@ -75,7 +75,8 @@ w = 0
 w1 = True
 e = 0
 d = 0
-d_r =0
+d_r = 0
+
 # Списки
 mobs = []
 cells_mobs = []
@@ -301,7 +302,7 @@ def level_draw():
                              fontsize=16)
         mod.screen.draw.text('AP:' + str(char.attack), topright=(cell.width * size_w - 5, 25), color='white',
                              fontsize=16)
-        mod.screen.draw.text('Mana:' + str(mana_char), topright=(cell.width * size_w - 5, 40), color='white',
+        mod.screen.draw.text('Mana:' + str(mana_char_kol), topright=(cell.width * size_w - 5, 40), color='white',
                              fontsize=16)
         mod.screen.draw.text('Level:' + str(level), center=(375, 20), color='white', fontsize=16)
 def draw():
@@ -350,9 +351,7 @@ def draw():
         mod.screen.draw.text('---', topleft=(260, 150+255), color="#E0FFFF", fontsize=25)
         mod.screen.draw.text("Prise:", topleft=(200, 200), color="#E0FFFF", fontsize=25)
         mod.screen.draw.text("HP:", topleft=(200, 230), color="#E0FFFF", fontsize=25)
-        mod.screen.draw.text("Money:", topleft=(200, 260), color="#E0FFFF", fontsize=25)
         mod.screen.draw.text(str(prise), topleft=(240, 230), color="#E0FFFF", fontsize=25)
-        mod.screen.draw.text(str(mana_char), topleft=(270, 260), color="#E0FFFF", fontsize=25)
 
     elif mode == 'level':
         level_hod.draw()
@@ -401,7 +400,7 @@ def draw():
         elif 4 <= level <= 5:
             mod.screen.draw.text("Another hatch", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         elif 6 <= level <= 7:
-            mod.screen.draw.text("Jast go down", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
+            mod.screen.draw.text("Just go down", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         elif level == 8:
             mod.screen.draw.text("Left a little", topleft=(char.x - 5, char.y - 20), color='white', fontsize=16)
         else:
@@ -431,7 +430,7 @@ def draw():
         mod.screen.draw.text("Press E", topleft=(char.x + 50, char.y + 20), color='white', fontsize=20)
 
 def on_key_down(key):
-    global mode, enemy, i, j, level, mana_char
+    global mode, enemy, i, j, level, mana_char_kol
 
     old_i = char.x
     old_j = char.y
@@ -448,7 +447,7 @@ def on_key_down(key):
         hilki.pop(char.collidelist(hilki))
 
     if char.collidelist(manas) != -1 and mod.keyboard.e:
-        mana_char += 1
+        mana_char_kol += 1
         manas.pop(char.collidelist(manas))
 
     enemy_index = char.collidelist(enemies)  # Получаем номер врага в списке
@@ -514,10 +513,28 @@ def on_key_down(key):
         level += 1
         mode = 'game'
 
+    # bombs
+    if mod.keyboard.b and mana_char_kol != 0 and mode == 'game':
+        mana_char_kol -= 1
+        if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
+            bomb.pos = (char.x, char.y)
+            animate(bomb, pos=(char.x + 50, char.y), tween='linear', duration=0.5)
+
+        if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
+            bomb.pos = (char.x, char.y)
+            animate(bomb, pos=(char.x - 50, char.y), tween='linear', duration=0.5)
+
+        if char.image == 'up1' or char.image == 'up2':
+            bomb.pos = (char.x, char.y)
+            animate(bomb, pos=(char.x, char.y - 50), tween='linear', duration=0.5)
+
+        if char.image == 'down1' or char.image == 'down2':
+            bomb.pos = (char.x, char.y)
+            animate(bomb, pos=(char.x, char.y + 50), tween='linear', duration=0.5)
 
 
 def update(dt):
-    global q, cell0, cells_mobs, mode, d, d_r
+    global q, cell0, cells_mobs, mode, d, d_r, mana_char_kol
 
     if char.collidelist(bones) != -1:
         d = 3
@@ -650,25 +667,7 @@ def update(dt):
     if bomb.collidelist(cells) != -1:
         cells.pop(bomb.collidelist(cells))
 
-    # bombs
-    if mod.keyboard.b and mode == 'game':
-        if char.image == 'stand1' or char.image == 'right1' or char.image == 'right2':
-            bomb.pos = (char.x, char.y)
-            animate(bomb, pos=(char.x + 50, char.y), tween='linear', duration=0.5)
-
-
-        if char.image == 'left1' or char.image == 'left2' or char.image == 'left3':
-            bomb.pos = (char.x, char.y)
-            animate(bomb, pos=(char.x - 50, char.y), tween='linear', duration=0.5)
-
-        if char.image == 'up1' or char.image == 'up2':
-            bomb.pos = (char.x, char.y)
-            animate(bomb, pos=(char.x, char.y - 50), tween='linear', duration=0.5)
-
-        if char.image == 'down1' or char.image == 'down2':
-            bomb.pos = (char.x, char.y)
-            animate(bomb, pos=(char.x, char.y + 50), tween='linear', duration=0.5)
-
+# Тыкаем на chara
 def on_mouse_down(pos):
     global d, d_r
     if char.collidepoint(pos) and (1 <= level <= 5):
@@ -732,6 +731,6 @@ elif 6 <= level <= 7:
     mana_random(4)
 elif 8 <= level <= 9:
     mana_random(4)
-mana_char = len(manas)
+
 level_random()
 pgzrun.go()
